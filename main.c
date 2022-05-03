@@ -4,11 +4,15 @@
 
 int matrixSize, matrix[10][10], sums[10];
 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void* rowSum(void* pointer) {
+        pthread_mutex_lock(&mutex);
         int y = *((int*) pointer);
         for (int i = 0; i < matrixSize; i++) {
                 sums[y] += matrix[y][i];
         }
+        pthread_mutex_unlock(&mutex);
         return NULL;
 }
 
@@ -42,7 +46,9 @@ void *main_thread(){
                 if (a != 0) {
                         printf("Thread creation failed\n");
                         break;
-                }
+                } /*else {
+                        printf("Thread created succefully\n");
+                }*/
         }
 
         for (int i = 0; i < matrixSize; i++) {
